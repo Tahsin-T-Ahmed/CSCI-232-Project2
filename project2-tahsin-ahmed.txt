@@ -1,0 +1,97 @@
+--**QUESTION 1: What percentage of NYC's restaurant's are approved for sidewalk seating?
+select concat(round(100 * cast((select count(*) from newrestaurants where approved_for_sidewalk_seating = 'yes') as decimal) / (select count(*) from newrestaurants), 2), '%') as "% of restaurants with sidewalk seating approval";
+
+
+
+
+--**QUESTION 2: What percentage of NYC's restaurant's are approved for roadway seating?
+select concat(round(100 * cast((select count(*) from newrestaurants where approved_for_roadway_seating = 'yes') as decimal) / (select count(*) from newrestaurants), 2), '%') as "% of restaurants with roadway seating approval";
+
+
+
+
+--**QUESTION 3: What percentage of NYC's restaurant's are approved for neither sideway seating nor roadway seating?
+select concat(round(100 * cast((select count(*) from newrestaurants where approved_for_roadway_seating = 'no' and approved_for_sidewalk_seating = 'no') as decimal) / (select count(*) from newrestaurants), 2), '%') as "% of restaurants without sidewalk or roadway seating";
+
+
+
+
+--**QUESTION 4: What is the sidewalk seating approval percentage of each NYC borough's restaurants?
+select "Borough", "Total", "Approved", concat(round((cast(b."Approved" as decimal) / a."Total") * 100, 2), '%') as "Percentage" from (
+    select 
+        (borough) as "Borough", 
+        (count(*)) as "Total"
+        
+    from newrestaurants 
+    group by borough
+    ) a
+inner join (
+    select 
+        borough, 
+        count(*) as "Approved"
+
+    from newrestaurants 
+    where approved_for_sidewalk_seating = 'yes'
+    group by borough
+    ) b 
+on a."Borough" = b.borough;
+
+
+
+
+--**QUESTION 5: Which NYC borough has the highest sidewalk seating approval percentage?
+select "Borough", "Total", "Approved", concat(round((cast(b."Approved" as decimal) / a."Total") * 100, 2), '%') as "Percentage" from (
+    select 
+        (borough) as "Borough", 
+        (count(*)) as "Total"
+        
+    from newrestaurants 
+    group by borough
+    ) a
+inner join (
+    select 
+        borough, 
+        count(*) as "Approved"
+
+    from newrestaurants 
+    where approved_for_sidewalk_seating = 'yes'
+    group by borough
+    ) b 
+on a."Borough" = b.borough 
+order by "Percentage"
+limit 1;
+
+
+
+***PROJECT WRITE-UP QUESTIONS***
+
+1) Information about your data
+    a) Why did you choose the data set you working with?
+    I chose this because it's relevant to the general population of NYC, with us being heavily affected by the pandemic. 
+    b) The dataset was about restaurants re-opening in NYC after the COVID pandemic. The dataset includes information about whether or not they offer sidewalk/roadway seating. This is important because it concerns public exposure without wearing masks, since diners will be eating outdoors. 
+    c) I wanted to explore large quantities of entries about restaurants and compare percentages with boolean values (yes/no on seating approval). 
+
+
+2) For each of the questions you asked, please answer the following: Please also write the question text. If you had multiple authors, kindly indicate which author answered which questions.
+    a) Why did you ask this question? Was there any information you wanted to learn? 
+    I wanted to learn about the impact restaurants play in the spread of COVID and/or its prevention. One important step they take is their approach to outdoor seating, which greatly increases exposure to the public while unmasked. The first three questions were concerned with different forms of outdoor seating, with the third one narrowing down which restaurants did not offer any outdoor seating at all. The last two compared percentages of restaurants by borough, since overall quantities of eateries differed drastically throughout the city. 
+    b) I believed I was successful in answering all of the questions. It was very tricky to produce the desired outcome, but through much practice and research, I was able to properly utilize SQL queries to give me the information I was looking for and wanted to showcase. 
+    c) I used many SQL functions and arithmetic operators, such as concat, round, cast, as well as keywords like "as", "where", "inner joins", and many more. My initial objective was to create questions that would lead to the use of complex SQL features instead of simple 1-step queries. 
+
+
+3) What if anything, did the project teach you? Do you have any suggestions to improve this 
+project? What issues did you face when trying to answer your questions/copying the data 
+(or any other issues)?
+This project taught me a lot about SQL and how to use many of its features together. It also gave me a very small glimpse of how complicated SQL can get, when given sufficient queries and enough nesting. I would suggest improvements to this project by incorporating more SQL features to execute more in-depth analysis of the data, such as exploring different latitude and longitude levels to assess different neighborhoods of the city. 
+Some issues I encountered were converting the CSV file into a SQL database, as the process took quite a while to load, and I feared that my computer would crash in the process. Luckily, it did not. Also, figuring out the SQL features were quite challenging, but online research has brushed up my skills. 
+
+
+4) If you had unlimited time and resources (i.e. you can collect your own dataset and use 
+tools other than SQL) what project would you pursue?
+Given more time and resources, I'd explore more complex questions that involve more detailed exploration of the data. It is a very large dataset containing lots of useful information. I'd explore the average distances between restaurants in different parts of the city, to see how densely or sparsely located they were. More questions along the lines of that, requiring computation of more data. 
+
+
+5) Did you enjoy this class? What did you like? What did you dislike? Do you have any 
+advice for improvements or other suggestions? If you have multiple authors, please 
+separate by author) 
+I enjoyed this class because it expanded by skill set as an aspiring web developer. I hope to incorporate this back-end knowledge into my pursuit as a Full-Stack Web Developer one day. I still believe this class would have gone better if conducted online, and wish that the Hunter College approved for it to be remote. Nevertheless, I didn't walk away from the course empty-handed, and gained much skill and knowledge about SQL and computers in general, thanks to you, Ariel. 
